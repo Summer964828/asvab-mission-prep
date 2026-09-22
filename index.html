@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1020"><link rel="manifest" href="manifest.json">
+<title>ASVAB Mission Prep</title>
+<style>
+:root{--bg:#0b1020;--card:#151c30;--card2:#1d2740;--text:#f4f7fb;--muted:#aeb9cc;--accent:#58c7ff;--good:#57d18c;--bad:#ff7272;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#080c18,#111a2e);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{padding:22px 18px 10px;max-width:1050px;margin:auto}.brand{font-weight:900;font-size:25px;letter-spacing:.5px}.sub{color:var(--muted);margin-top:4px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 18px;position:sticky;top:0;background:#0b1020ee;backdrop-filter:blur(12px);z-index:3}
+nav button{white-space:nowrap;border:1px solid #2b3957;background:#131c30;color:#dce7f7;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}nav button.active{background:var(--accent);color:#06101b;border-color:var(--accent)}
+main{max-width:1050px;margin:auto;padding:12px 18px 45px}.hero,.panel{background:var(--card);border:1px solid #273552;border-radius:20px;padding:22px;margin-bottom:16px;box-shadow:0 12px 35px #0003}
+h1,h2,h3{margin-top:0}.hero h1{font-size:34px;margin-bottom:8px}.hero p{color:var(--muted);line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.section-card{background:var(--card2);border:1px solid #30405f;border-radius:16px;padding:16px;cursor:pointer}.section-card:hover{border-color:var(--accent);transform:translateY(-1px)}.section-card h3{margin-bottom:7px}.section-card small{color:var(--muted)}
+.progress{height:9px;background:#29344c;border-radius:99px;overflow:hidden;margin:8px 0}.bar{height:100%;background:var(--accent);width:0}
+button.primary{background:var(--accent);color:#06101b;border:0;padding:12px 17px;border-radius:12px;font-weight:900;cursor:pointer}.secondary{background:#202b43;color:white;border:1px solid #394967;padding:11px 15px;border-radius:12px;font-weight:800;cursor:pointer}
+.answer{display:block;width:100%;text-align:left;margin:9px 0;padding:14px;border-radius:12px;background:#18233a;color:#eef5ff;border:1px solid #34435f;cursor:pointer;font-size:15px}.answer:hover{border-color:var(--accent)}.answer.correct{background:#123d2a;border-color:var(--good)}.answer.wrong{background:#452127;border-color:var(--bad)}
+.feedback{padding:14px;border-radius:12px;background:#111a2b;color:#dce7f7;margin:14px 0;line-height:1.5}.hidden{display:none}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#24304a;color:#bfeaff;font-size:12px;font-weight:800}
+.stat{font-size:28px;font-weight:900}.muted{color:var(--muted)}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.timer{font-variant-numeric:tabular-nums;font-weight:900;color:var(--gold)}
+input,select{background:#111a2c;border:1px solid #35445f;color:white;padding:11px;border-radius:10px}
+footer{max-width:1050px;margin:auto;padding:0 18px 35px;color:#8190a9;font-size:12px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">🎖️ ASVAB Mission Prep</div>
+  <div class="sub">Practice smarter. Track progress. Build confidence.</div>
+</header>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+Original study material. This app is organized around the major ASVAB subject areas commonly covered in ASVAB prep resources, including <i>ASVAB for Dummies</i>. It does not reproduce copyrighted book text or questions.
+</footer>
+
+<script>
+const sections=[
+["General Science","Science","Life science, earth science, physical science, basic biology, chemistry, physics."],
+["Arithmetic Reasoning","Math","Word problems, ratios, percentages, rates, averages, proportions."],
+["Word Knowledge","Verbal","Vocabulary, context clues, synonyms, prefixes, suffixes, roots."],
+["Paragraph Comprehension","Verbal","Main idea, inference, details, tone, conclusions from short passages."],
+["Mathematics Knowledge","Math","Algebra, geometry, equations, exponents, fractions, formulas."],
+["Electronics Information","Technical","Circuits, current, voltage, resistance, components, basic electronics."],
+["Auto Information","Technical","Engines, fuel, cooling, lubrication, electrical and drivetrain basics."],
+["Shop Information","Technical","Tools, materials, measurement, fasteners, workshop safety."],
+["Mechanical Comprehension","Technical","Force, motion, machines, gears, pulleys, pressure, mechanical principles."],
+["Assembling Objects","Visual","Spatial reasoning, rotations, combining pieces, visual patterns."]
+];
+
+const qs=[
+{sec:"General Science",d:1,q:"Water freezes at approximately what temperature on the Celsius scale?",a:["0°C","32°C","50°C","100°C"],c:0,e:"Pure water freezes at 0°C under standard atmospheric pressure."},
+{sec:"General Science",d:2,q:"Which organelle is primarily responsible for producing usable energy (ATP) in most eukaryotic cells?",a:["Nucleus","Mitochondrion","Ribosome","Cell wall"],c:1,e:"Mitochondria convert energy from nutrients into ATP."},
+{sec:"General Science",d:3,q:"If an object has a mass of 4 kg and accelerates at 3 m/s², what force acts on it?",a:["1.33 N","7 N","12 N","16 N"],c:2,e:"Newton's second law is F = ma, so 4 × 3 = 12 N."},
+{sec:"Arithmetic Reasoning",d:1,q:"A truck travels 180 miles in 3 hours. What is its average speed?",a:["45 mph","60 mph","90 mph","120 mph"],c:1,e:"Average speed = distance ÷ time = 180 ÷ 3 = 60 mph."},
+{sec:"Arithmetic Reasoning",d:2,q:"A $80 item is discounted by 25%. What is the sale price?",a:["$20","$55","$60","$75"],c:2,e:"25% of $80 is $20. Subtract $20 from $80 to get $60."},
+{sec:"Arithmetic Reasoning",d:3,q:"A ratio of red to blue parts is 3:5. If there are 40 blue parts, how many red parts are there?",a:["15","24","27","30"],c:1,e:"5 parts correspond to 40, so one part is 8. Three parts = 24."},
+{sec:"Word Knowledge",d:1,q:"Which word is closest in meaning to 'abundant'?",a:["Scarce","Plentiful","Hidden","Fragile"],c:1,e:"Abundant means existing in large quantities; plentiful is the closest match."},
+{sec:"Word Knowledge",d:2,q:"'Reluctant' most nearly means:",a:["Unwilling","Excited","Certain","Careless"],c:0,e:"Reluctant describes someone who is hesitant or unwilling."},
+{sec:"Word Knowledge",d:3,q:"'Mitigate' most nearly means:",a:["Increase","Delay permanently","Reduce the severity of","Measure precisely"],c:2,e:"Mitigate means to make something less severe, harmful, or painful."},
+{sec:"Paragraph Comprehension",d:1,q:"Passage: A mechanic replaced a worn belt before it broke. The vehicle never became disabled, but the owner avoided a likely repair problem. What is the main idea?",a:["Belts never fail","Preventive maintenance can prevent larger problems","The vehicle was unsafe","The mechanic damaged the vehicle"],c:1,e:"The passage emphasizes preventing a larger failure through maintenance."},
+{sec:"Paragraph Comprehension",d:2,q:"Passage: Mia studied for 30 minutes each evening. After several weeks, she noticed that questions she once found difficult became easier. What can reasonably be inferred?",a:["She stopped studying","Regular practice improved her familiarity","The questions became shorter","She memorized every answer"],c:1,e:"The passage supports an inference that consistent practice improved her ability."},
+{sec:"Paragraph Comprehension",d:3,q:"Passage: The crew postponed the repair because the storm made the work area unsafe. Once conditions improved, they completed the repair. Which conclusion is best supported?",a:["They forgot the repair","Safety conditions influenced the timing","The repair was unnecessary","Storms never affect repairs"],c:1,e:"The passage directly connects unsafe conditions with postponing the work."},
+{sec:"Mathematics Knowledge",d:1,q:"Solve: 3x + 5 = 20.",a:["3","5","8","15"],c:1,e:"Subtract 5: 3x = 15. Divide by 3: x = 5."},
+{sec:"Mathematics Knowledge",d:2,q:"What is the area of a rectangle 8 units long and 5 units wide?",a:["13","26","40","80"],c:2,e:"Area = length × width = 8 × 5 = 40 square units."},
+{sec:"Mathematics Knowledge",d:3,q:"If x² - 9 = 0, which values of x satisfy the equation?",a:["3 only","-3 only","3 and -3","9 and -9"],c:2,e:"x² = 9, so x can be either 3 or -3."},
+{sec:"Electronics Information",d:1,q:"According to Ohm’s law, voltage equals:",a:["Current ÷ resistance","Current × resistance","Resistance ÷ current","Current + resistance"],c:1,e:"Ohm’s law is V = I × R."},
+{sec:"Electronics Information",d:2,q:"A component designed to resist electric current is a:",a:["Resistor","Battery","Switch","Antenna"],c:0,e:"A resistor limits or controls current in a circuit."},
+{sec:"Electronics Information",d:3,q:"Two resistors of 6 Ω and 3 Ω are connected in parallel. What is their equivalent resistance?",a:["2 Ω","3 Ω","9 Ω","18 Ω"],c:0,e:"For two parallel resistors, 1/R = 1/6 + 1/3 = 1/2, so R = 2 Ω."},
+{sec:"Auto Information",d:1,q:"What is the main purpose of engine oil?",a:["Increase tire pressure","Lubricate moving engine parts","Cool the passenger cabin","Charge the battery"],c:1,e:"Engine oil reduces friction and helps protect moving engine components."},
+{sec:"Auto Information",d:2,q:"Which system helps remove heat from a typical liquid-cooled engine?",a:["Cooling system","Exhaust system only","Steering system","Ignition key"],c:0,e:"The cooling system circulates coolant and transfers heat away from the engine."},
+{sec:"Auto Information",d:3,q:"A vehicle's alternator primarily converts mechanical energy into electrical energy to:",a:["Lubricate the engine","Charge the battery and power electrical systems","Cool the tires","Increase fuel octane"],c:1,e:"The alternator generates electrical power while the engine runs."},
+{sec:"Shop Information",d:1,q:"Which tool is commonly used to tighten or loosen a hexagonal nut?",a:["Wrench","Chisel","Handsaw","File"],c:0,e:"A wrench is designed to grip and turn nuts and bolts."},
+{sec:"Shop Information",d:2,q:"Which unit is commonly used to measure length in the U.S. customary system?",a:["Liter","Kilogram","Inch","Celsius"],c:2,e:"Inches are a common U.S. customary unit of length."},
+{sec:"Shop Information",d:3,q:"A drill bit becomes dull during repeated use. Which action is most appropriate before continuing precision work?",a:["Increase pressure dramatically","Inspect and replace or sharpen the bit as appropriate","Add water to the motor","Use the bit backward"],c:1,e:"A dull bit can reduce accuracy and increase the risk of damage or injury."},
+{sec:"Mechanical Comprehension",d:1,q:"If a small gear drives a larger gear, the larger gear generally rotates:",a:["Faster","Slower","At exactly the same speed","Without rotating"],c:1,e:"A larger driven gear turns more slowly, while providing greater torque, assuming the same basic gear arrangement."},
+{sec:"Mechanical Comprehension",d:2,q:"A longer wrench handle generally makes it easier to turn a tight bolt because it increases:",a:["Temperature","Lever arm","Mass of the bolt","Voltage"],c:1,e:"A longer lever arm produces more torque for the same applied force."},
+{sec:"Mechanical Comprehension",d:3,q:"Ignoring friction, a movable pulley can reduce the input force required to lift a load because:",a:["It eliminates gravity","The load is supported by multiple rope segments","It increases the load's mass","It stops the rope from moving"],c:1,e:"Multiple supporting rope segments share the load, reducing the force needed."},
+{sec:"Assembling Objects",d:1,q:"If a shape is rotated 90° clockwise, which statement is true?",a:["Its size changes","Its orientation changes while its shape and size stay the same","It becomes a mirror image","It disappears"],c:1,e:"Rotation changes orientation, not shape or size."},
+{sec:"Assembling Objects",d:2,q:"When mentally assembling pieces, matching edges that are the same length most directly helps you determine:",a:["Which pieces can connect","The color of the final object","Its weight","Its temperature"],c:0,e:"Compatible edges help determine which pieces can fit together."},
+{sec:"Assembling Objects",d:3,q:"An object has an arrow pointing north. If the entire object is rotated 180°, the arrow points:",a:["North","South","East","West"],c:1,e:"A 180° rotation reverses the direction, so north becomes south."}
+];
+
+let state=JSON.parse(localStorage.getItem("asvabPrep")||'{"answered":0,"correct":0,"by":{},"level":{}}');
+let current=null, idx=0, selected=[], quizSet=[], quizMode="mixed";
+
+function save(){localStorage.setItem("asvabPrep",JSON.stringify(state))}
+function pct(sec){let x=state.by[sec]||{a:0,c:0};return x.a?Math.round(x.c/x.a*100):0}
+function getLevel(sec){return Math.max(1,Math.min(3,state.level[sec]||1))}
+function chooseQuestion(sec){
+  let pool=qs.filter(x=>x.sec===sec && x.d===getLevel(sec));
+  if(!pool.length) pool=qs.filter(x=>x.sec===sec);
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function nav(){
+document.getElementById("nav").innerHTML=["Dashboard","Practice","Study Guide","Training Videos"].map(x=>`<button onclick="go('${x}')">${x}</button>`).join("");
+}
+function go(page){if(page==="Dashboard") dashboard(); else if(page==="Practice") practiceMenu(); else if(page==="Training Videos") videos(); else guide(); nav()}
+function dashboard(){
+let p=state.answered?Math.round(state.correct/state.answered*100):0;
+document.getElementById("app").innerHTML=`<section class="hero"><span class="pill">ADAPTIVE MISSION CONTROL</span><h1>Prepare for the ASVAB</h1><p>Answer questions and the app adjusts each subject's difficulty based on your performance.</p><div class="row"><div><div class="stat">${state.correct}</div><div class="muted">Correct</div></div><div><div class="stat">${state.answered}</div><div class="muted">Attempted</div></div><div><div class="stat">${p}%</div><div class="muted">Accuracy</div></div></div><br><button class="primary" onclick="practiceMenu()">Start Adaptive Practice</button></section>
+<section class="panel"><h2>Subject progress</h2><div class="grid">${sections.map(s=>{let lv=getLevel(s[0]);return `<div class="section-card" onclick="sectionQuiz('${s[0]}')"><h3>${s[0]}</h3><small>${s[2]}</small><div class="progress"><div class="bar" style="width:${pct(s[0])}%"></div></div><small>${pct(s[0])}% accuracy · Level ${lv}/3</small></div>`}).join("")}</div></section>`;
+}
+function practiceMenu(){
+document.getElementById("app").innerHTML=`<section class="hero"><h1>Adaptive Practice Center</h1><p class="muted">The app chooses the next question based on your current level in each subject.</p><div class="grid">
+<div class="section-card" onclick="startQuiz('mixed',10)"><h3>🎯 10-Question Mission</h3><small>All subjects. Adaptive difficulty.</small></div>
+<div class="section-card" onclick="startQuiz('mixed',20)"><h3>🔥 20-Question Challenge</h3><small>Longer adaptive session.</small></div>
+<div class="section-card" onclick="sectionPick()"><h3>📚 Section Drill</h3><small>Build mastery in one subject.</small></div>
+</div></section>
+<section class="panel"><h2>How adaptive difficulty works</h2><p>Each subject has Levels 1–3. Get a question right and the next question in that subject moves up a level. Miss one and it moves down a level. Level 1 reinforces fundamentals; Level 2 adds application; Level 3 adds harder reasoning.</p></section>`;
+}
+function sectionPick(){
+document.getElementById("app").innerHTML=`<section class="panel"><h2>Choose a section</h2><div class="grid">${sections.map(s=>`<div class="section-card" onclick="sectionQuiz('${s[0]}')"><h3>${s[0]}</h3><small>${s[2]}</small></div>`).join("")}</div></section>`;
+}
+function sectionQuiz(sec){quizMode=sec;quizSet=[];for(let i=0;i<8;i++)quizSet.push(chooseQuestion(sec));idx=0;renderQ()}
+function startQuiz(mode,n){
+quizMode=mode;quizSet=[];let pool=[...sections].map(s=>s[0]);
+for(let i=0;i<n;i++){let sec=pool[i%pool.length];quizSet.push(chooseQuestion(sec))}
+idx=0;renderQ();
+}
+function renderQ(){
+if(idx>=quizSet.length){finish();return}
+let x=quizSet[idx], lv=getLevel(x.sec);
+document.getElementById("app").innerHTML=`<section class="panel"><div class="row"><span class="pill">${x.sec} · Level ${lv}/3</span><span class="muted">Question ${idx+1} of ${quizSet.length}</span></div><h2>${x.q}</h2>${x.a.map((a,i)=>`<button class="answer" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${a}</button>`).join("")}<div id="fb" class="feedback hidden"></div></section>`;
+}
+function answer(i){
+let x=quizSet[idx],buttons=[...document.querySelectorAll(".answer")],correct=i===x.c,old=getLevel(x.sec);
+buttons.forEach((b,j)=>{b.disabled=true;if(j===x.c)b.classList.add("correct");if(j===i&&i!==x.c)b.classList.add("wrong")});
+state.answered++;if(correct)state.correct++;state.by[x.sec]??={a:0,c:0};state.by[x.sec].a++;if(correct)state.by[x.sec].c++;
+state.level[x.sec]=Math.max(1,Math.min(3,old+(correct?1:-1)));save();
+let newLevel=state.level[x.sec];
+let direction=correct?(newLevel>old?"⬆️ Difficulty increased":"✅ Level maintained"):(newLevel<old?"⬇️ Difficulty lowered":"🧩 More practice at this level");
+let fb=document.getElementById("fb");fb.classList.remove("hidden");fb.innerHTML=`<b>${correct?"Correct!":"Not quite."}</b> ${direction}<br>${x.e}<br><br><button class="primary" onclick="idx++;renderQ()">Next Question</button>`;
+}
+function finish(){
+document.getElementById("app").innerHTML=`<section class="hero"><span class="pill">MISSION COMPLETE</span><h1>Practice session complete.</h1><p>Your subject levels and accuracy were saved locally on this device.</p><div class="row"><button class="primary" onclick="practiceMenu()">Practice Again</button><button class="secondary" onclick="dashboard()">Dashboard</button></div></section>`;
+}
+
+
+function videos(){
+document.getElementById("app").innerHTML=`<section class="hero"><span class="pill">RECRUIT TRAINING</span><h1>What to Expect</h1><p>These resources are for learning what Marine Corps Recruit Training is like. The videos stream from their original sites, so internet is required to watch them. The rest of this app remains usable offline.</p></section>
+<section class="panel"><h2>Official Marine Corps video</h2><div class="section-card" onclick="window.open('https://www.youtube.com/watch?v=yHhGJMd4Rrk','_blank')"><h3>▶ What happens at Recruit Training — U.S. Marine Corps</h3><small>Official Marine Corps Recruiting video • YouTube</small><p class="muted">A look at the 13-week Marine Corps Recruit Training experience.</p></div></section>
+<section class="panel"><h2>More things to learn</h2><div class="grid">
+<div class="section-card" onclick="window.open('https://www.marines.com/become/recruit-training','_blank')"><h3>📖 Official Recruit Training Guide</h3><small>Marine Corps</small><p class="muted">Phases, The Crucible, locations, schedule, and what happens after recruit training.</p></div>
+<div class="section-card" onclick="window.open('https://www.marines.com/become/delayed-entry-program','_blank')"><h3>🎒 Delayed Entry Program</h3><small>Marine Corps</small><p class="muted">What poolees do while preparing for recruit training.</p></div>
+<div class="section-card" onclick="window.open('https://www.youtube.com/results?search_query=Marine+Corps+Recruit+Training+official','_blank')"><h3>🔎 More official videos</h3><small>YouTube</small><p class="muted">Browse Marine Corps Recruiting's current video library.</p></div>
+</div></section>
+<section class="panel"><h2>Quick reality check</h2><p class="muted">The Marine Corps currently describes recruit training as approximately 13 weeks, with four phases and a 54-hour culminating Crucible. Exact schedules and training details can change, so use your recruiter and current official Marine Corps materials for the latest information.</p></section>`;
+}
+
+function guide(){
+document.getElementById("app").innerHTML=`<section class="panel"><h1>Study Guide</h1><p class="muted">Use these as topic checklists. For full instruction, pair the app with your ASVAB prep book.</p><div class="grid">${sections.map(s=>`<div class="section-card"><h3>${s[0]}</h3><p class="muted">${s[2]}</p><small>Tip: Learn the core concepts first, then practice under time pressure.</small></div>`).join("")}</div></section>`;
+}
+nav();dashboard();
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
+</script>
+</body>
+</html>
